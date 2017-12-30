@@ -25,6 +25,8 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.script.ScriptException;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -44,6 +46,27 @@ public class CommandStore {
 		loadConfig();
 		loadCommands();
 				
+	}
+	/**
+	 * Executes a command 
+	 * @param name Name of the command
+	 * @param args Array of arguments to give to the command (Can be null)
+	 * @return The output of the command
+	 * @throws ScriptException When the command gives a script exception
+	 */
+	public Object exec(String name, String[] args) throws ScriptException {
+		if(commands.get(name) == null) return "Command doesnt exist";
+		return commands.get(name).exec(args);
+	}
+	/**
+	 * Registers a new command to the store
+	 * @param name Name of the command
+	 * @param value Value the command should return or ECMAScript based script command should execute
+	 * @param isScript If the command is a script or not
+	 */
+	public void registerCommand(String name, String value, Boolean isScript) {
+		if(!isScript) commands.put(name, new Command(name, value, false));
+		commands.put(name, new Command(name, value, true));
 	}
 	/** Loads commands from command directory
 	 * @see #loadConfig()
