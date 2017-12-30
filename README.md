@@ -21,6 +21,6 @@ The name of the file determines the name of the command
 You may also add commands directly to the CommandStore with the `registerCommand` method
 # Executing Commands
 To execute a command use the `exec` method in CommandStore with the name of the command to execute
-# Dependancies
+# Dependencies
 Google GSON
 
