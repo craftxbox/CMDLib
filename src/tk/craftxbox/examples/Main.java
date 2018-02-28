@@ -1,4 +1,4 @@
-package tk.craftxbox.main;
+package tk.craftxbox.examples;
 
 import java.util.Scanner;
 
@@ -15,7 +15,7 @@ public class Main {
 			if(cs.commands.get(in) != null)
 				try {
 					try {
-						System.out.println(cs.exec(in.split(" ")[0], in.substring(in.split(" ")[0].length() + 1).split(" ")));
+						System.out.println(cs.exec(in.split(" ")[0], null));
 
 					} catch (StringIndexOutOfBoundsException e) {
 						System.out.println(cs.exec(in.split(" ")[0],null));

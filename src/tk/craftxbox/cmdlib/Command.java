@@ -17,7 +17,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package tk.craftxbox.cmdlib;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -60,19 +61,27 @@ public class Command {
 	/**Executes the command
 	 * @param args Arguments for scripted command. Can be null.
 	 */
-	public Object exec(String[] args) throws ScriptException {
+	public Object exec(Map<String,Object> args) throws ScriptException {
 		//Checks if a value should be returned or a script should be executed
 		if(script == null) return value;
 				
-		//Sets args to an empty array if it is null
-		if(args == null) args = new String[0];
+		//Sets args to an empty map if it is null
+		if(args == null) args = new HashMap<String,Object>();
+		
 		
 		//Creates the script engine to execute the command
 		ScriptEngineManager f = new ScriptEngineManager();
 		ScriptEngine e = f.getEngineByName("javascript");
 		
+		//Iterate through map entries and pass them to the scriptengine
+		for(String i : args.keySet()){
+			e.put(i,args.get(i));
+		}
+		
 		//Executes the command and returns the output
-		return e.eval("var args = " + Arrays.asList(args).toString() + ";\n" + script);
+		
+		e.put("args",args);
+		return e.eval(script);
 	}
 	public String toString() {return this.name;}
 }

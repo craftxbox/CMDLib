@@ -54,7 +54,7 @@ public class CommandStore {
 	 * @return The output of the command
 	 * @throws ScriptException When the command gives a script exception
 	 */
-	public Object exec(String name, Object[] args) throws ScriptException {
+	public Object exec(String name, Map<String,Object> args) throws ScriptException {
 		if(commands.get(name) == null) return "Command doesnt exist";
 		return commands.get(name).exec(args);
 	}
