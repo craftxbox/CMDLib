@@ -1,4 +1,6 @@
 # CMDLib
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcraftxbox%2FCMDLib.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcraftxbox%2FCMDLib?ref=badge_shield)
+
 A small library for registering commands in java.
 # Installation
 Include the jar file as a library 
@@ -24,3 +26,7 @@ To execute a command use the `exec` method in CommandStore with the name of the 
 # Dependencies
 Google GSON
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcraftxbox%2FCMDLib.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcraftxbox%2FCMDLib?ref=badge_large)
