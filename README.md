@@ -1,4 +1,4 @@
-# CMDLib
+# CMDLib [![Build status](https://ci.appveyor.com/api/projects/status/4vr4be7mqp087brb?svg=true)](https://ci.appveyor.com/project/craftxbox/cmdlib)
 A small library for registering commands in java.
 # Installation
 Include the jar file as a library 
