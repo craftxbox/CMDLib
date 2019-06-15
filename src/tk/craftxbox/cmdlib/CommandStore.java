@@ -17,10 +17,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 package tk.craftxbox.cmdlib;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +63,7 @@ public class CommandStore {
 	/**
 	 * Registers a new command to the store
 	 * @param name Name of the command
-	 * @param value Value the command should return or ECMAScript based script command should execute
+	 * @param value Value the command should return or ECMAScript 5 script command should evaluate
 	 * @param isScript If the command is a script or not
 	 */
 	public void registerCommand(String name, String value, Boolean isScript) {
@@ -70,11 +72,13 @@ public class CommandStore {
 	}
 	/** Loads commands from command directory
 	 * @see #loadConfig()
+	 * @see #reload()
 	 * @throws IOException When command directory cannot be read
 	 * @throws NullPointerException When Configuration isn't loaded
 	 */
 	public void loadCommands() throws IOException,NullPointerException {
 		// Get the directory in the configuration
+		this.commands.clear();
 		File f = new File(config.get("dir").getAsString());
 		
 		//Get everything in the directory
@@ -92,20 +96,21 @@ public class CommandStore {
 				//If file exists read its contents
 				if(f.exists()) {
 					String t = "";
-					FileInputStream s = new FileInputStream(f);
-					while(s.available() > 0) {
-						t += (char)s.read();
+					BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
+					String str;
+					while ((str = in.readLine()) != null) {
+						t = t + str + "\n";
 					}
 					//Register new command
 					commands.put(n, new Command(n,t,true));
 					
-					s.close();
+					in.close();
 				}
 			}
 		}
 	}
 	/** Loads configuration file 
-	 * @throws IOException When configuration cannot be read or written to
+	 * @throws IOException When configuration cannot be read
 	 */
 	public void loadConfig() throws IOException {
 		//Get configuration from run directory
