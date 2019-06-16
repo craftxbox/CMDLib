@@ -57,8 +57,8 @@ public class CommandStore {
 	 * @throws ScriptException When the command gives a script exception
 	 */
 	public Object exec(String name, Map<String,Object> args) throws ScriptException {
-		if(commands.get(name) == null) return "Command doesnt exist";
-		return commands.get(name).exec(args);
+		if(this.commands.get(name) == null) return "Command doesnt exist";
+		return this.commands.get(name).exec(args);
 	}
 	/**
 	 * Registers a new command to the store
@@ -66,9 +66,9 @@ public class CommandStore {
 	 * @param value Value the command should return or ECMAScript 5 script command should evaluate
 	 * @param isScript If the command is a script or not
 	 */
-	public void registerCommand(String name, String value, Boolean isScript) {
-		if(!isScript) commands.put(name, new Command(name, value, false));
-		commands.put(name, new Command(name, value, true));
+	public void registerCommand(String name, String value, boolean isScript) {
+		if(!isScript) this.commands.put(name, new Command(name, value, false));
+		this.commands.put(name, new Command(name, value, true));
 	}
 	/** Loads commands from command directory
 	 * @see #loadConfig()
@@ -96,15 +96,15 @@ public class CommandStore {
 				//If file exists read its contents
 				if(f.exists()) {
 					String t = "";
-					BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"));
-					String str;
-					while ((str = in.readLine()) != null) {
-						t = t + str + "\n";
-					}
-					//Register new command
-					commands.put(n, new Command(n,t,true));
-					
-					in.close();
+					try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF8"))){
+						String str;
+						while ((str = in.readLine()) != null) {
+							t = t + str + "\n";
+						}
+						//Register new command
+						this.commands.put(n, new Command(n,t,true));
+						in.close();
+					} 
 				}
 			}
 		}
@@ -112,26 +112,30 @@ public class CommandStore {
 	/** Loads configuration file 
 	 * @throws IOException When configuration cannot be read
 	 */
-	public void loadConfig() throws IOException {
+	public static void loadConfig() throws IOException {
 		//Get configuration from run directory
 		File f = new File("config.json");
 		
 		//If the configuration doesn't exist, create a default configuration file
 		if(!f.exists()) {
 			f.createNewFile();
-			OutputStream s = new FileOutputStream(f);
-			s.write(new String("{\"dir\":\"./\"}").getBytes());
-			s.flush();
-			s.close();
+			try(OutputStream s = new FileOutputStream(f)){
+				s.write(new String("{\"dir\":\"./\"}").getBytes());
+				s.flush();
+				s.close();
+			}
+			
 		}
 		//Open and read configuration to config
-		FileInputStream s = new FileInputStream(f);
-		String t = "";
-		while(s.available() > 0) {
-			t += (char)s.read();
+		try(FileInputStream s = new FileInputStream(f)){
+			String t = "";
+			while(s.available() > 0) {
+				t += (char)s.read();
+			}
+			config = new JsonParser().parse(t).getAsJsonObject();
+			s.close();
 		}
-		config = new JsonParser().parse(t).getAsJsonObject();
-		s.close();
+		
 	}
 	/** Reload configuration and commands */
 	public void reload() throws IOException {

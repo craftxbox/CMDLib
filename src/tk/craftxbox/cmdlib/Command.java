@@ -45,7 +45,7 @@ public class Command {
 	 * @param isScript Used to identify if this is a scripted command or not
 	 * @throws NullPointerException in value is null
 	 */
-	public Command(String name, Object value, Boolean isScript) {
+	public Command(String name, Object value, boolean isScript) {
 		//Sets the name of the command
 		this.name = name;
 		
@@ -61,12 +61,14 @@ public class Command {
 	/**Executes the command
 	 * @param args Arguments for scripted command. Can be null.
 	 */
-	public Object exec(Map<String,Object> args) throws ScriptException {
+	public Object exec(Map<String,Object> argin) throws ScriptException {
 		//Checks if a value should be returned or a script should be executed
-		if(script == null) return value;
+		if(this.script == null) return this.value;
 				
+		Map<String,Object> args = argin;
+		
 		//Sets args to an empty map if it is null
-		if(args == null) args = new HashMap<String,Object>();
+		if(argin == null) args = new HashMap<>();
 		
 		
 		//Creates the script engine to execute the command
@@ -81,7 +83,8 @@ public class Command {
 		//Executes the command and returns the output
 		
 		e.put("args",args);
-		return e.eval(script);
+		return e.eval(this.script);
 	}
+	@Override
 	public String toString() {return this.name;}
 }
